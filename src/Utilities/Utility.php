@@ -26,19 +26,45 @@ class Utility
         // Determinons la region
         $entityGroupe = $this->em->getRepository(Groupe::class)->findByScout($groupe);
 
-        // Verification de l'existence du groupe dans le système
-        $verif = $this->em->getRepository(User::class)->findOneBy(['groupe'=>$entityGroupe]);
-        if ($verif) return false;
-
         // Generation des paramètres de connexion
         $racine  = $this->username($entityGroupe->getDistrict()->getRegion()->getId());
         $username = $racine.''.$entityGroupe->getId();
         $password = $this->password();
 
-        if ($fonction === 'NATIONAL') $role[] = 'ROLE_NATION';
-        elseif ($fonction === 'CR') $role[] = 'ROLE_REGION';
-        elseif ($fonction === 'CD') $role[] = 'ROLE_DISTRICT';
-        else $role[] = 'ROLE_USER';
+        if ($fonction === 'CN') {
+            $role[] = 'ROLE_ADMIN';
+            $username = $racine;
+        }
+        elseif ($fonction === 'NATIONAL') {
+            $role[] = 'ROLE_NATION';
+            $username = $racine.''.mt_rand(100,999);
+            $exist = $this->em->getRepository(User::class)->findOneBy(['username'=>$username]);
+            while ($exist){
+                $username = $racine.''.mt_rand(100,999);
+                $exist = $this->em->getRepository(User::class)->findOneBy(['username'=>$username]);
+            }
+        }
+        elseif ($fonction === 'CR') {
+            $role[] = 'ROLE_REGION';
+
+            // Verification de l'existence du groupe dans le système
+            $verif = $this->em->getRepository(User::class)->findOneBy(['groupe'=>$entityGroupe]);
+            if ($verif) return false;
+        }
+        elseif ($fonction === 'CD') {
+            $role[] = 'ROLE_DISTRICT';
+
+            // Verification de l'existence du groupe dans le système
+            $verif = $this->em->getRepository(User::class)->findOneBy(['groupe'=>$entityGroupe]);
+            if ($verif) return false;
+        }
+        else {
+            $role[] = 'ROLE_USER';
+
+            // Verification de l'existence du groupe dans le système
+            $verif = $this->em->getRepository(User::class)->findOneBy(['groupe'=>$entityGroupe]);
+            if ($verif) return false;
+        }
 
         // Enregistrement
         $user = new User();
@@ -79,6 +105,29 @@ class Utility
         $this->em->flush();
 
         return true;
+    }
+
+    /**
+     * Année de cotisation du scout
+     *
+     * @return string
+     */
+    public function annee()
+    {
+        $mois_encours = Date('m', time());
+        if ($mois_encours > 9){
+            $debut_annee = Date('Y', time());
+            $fin_annee = Date('Y', time())+1;
+            //$an = Date('y', time())+1;
+        }else{
+            $debut_annee = Date('Y', time())-1;
+            $fin_annee = Date('Y', time());
+            //$an = Date('y', time());
+        }
+
+        $annee = $debut_annee.'-'.$fin_annee;
+
+        return $annee;
     }
 
     /**
