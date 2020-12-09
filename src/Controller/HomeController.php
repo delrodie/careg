@@ -45,7 +45,11 @@ class HomeController extends AbstractController
                 }else{
                     die("Ce n'est pas un chef de groupe");
                 }
-            } else{
+            }elseif ($email === "delrodieamoikon@gmail.com") {
+                $this->utility->superAdmin();
+                dd("c'est enregistrer");
+            }
+            else{
                 die('Aucun scout');
             }
             // sinon exit

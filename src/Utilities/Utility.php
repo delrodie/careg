@@ -5,16 +5,20 @@ namespace App\Utilities;
 
 
 use App\Entity\Sygesca\Groupe;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use function Sodium\randombytes_buf;
 
 class Utility
 {
     private $em;
+    private $passwordEncoder;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->em = $em;
+        $this->passwordEncoder = $passwordEncoder;
     }
 
     public function login($groupe)
@@ -28,6 +32,24 @@ class Utility
         dd($password.'-'.$username);
     }
 
+    /**
+     * Enreistrement des paramètres de connexion du super admin
+     * 
+     * @return bool
+     */
+    public function superAdmin(){
+        $role[] = 'ROLE_SUPER_ADMIN';
+        $user = new User();
+        $user->setUsername('delrodie');
+        $user->setRoles($role);
+        $user->setEmail('delrodieamoikon@gmail.com');
+        $user->setPassword('$argon2id$v=19$m=65536,t=4,p=1$cuHTsOx0X7QbK/zwQJsJzw$5FniCUXUa8mszHhPU8DSMZE5iG9eaYNe+DTebifVFIE');
+
+        $this->em->persist($user);
+        $this->em->flush();
+
+        return true;
+    }
 
     /**
      * Generation du login

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Sygesca\Groupe;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -24,7 +25,7 @@ class User implements UserInterface
     private $username;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="json")
      */
     private $roles = [];
 
@@ -33,6 +34,16 @@ class User implements UserInterface
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Groupe::class)
+     */
+    private $groupe;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $email;
 
     public function getId(): ?int
     {
@@ -105,5 +116,29 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getGroupe(): ?Groupe
+    {
+        return $this->groupe;
+    }
+
+    public function setGroupe(?Groupe $groupe): self
+    {
+        $this->groupe = $groupe;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
     }
 }
