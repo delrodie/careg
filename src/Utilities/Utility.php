@@ -21,20 +21,50 @@ class Utility
         $this->passwordEncoder = $passwordEncoder;
     }
 
-    public function login($groupe)
+    public function registration($groupe, $email, $fonction = null)
     {
         // Determinons la region
         $entityGroupe = $this->em->getRepository(Groupe::class)->findByScout($groupe);
-        //dd();
+
+        // Verification de l'existence du groupe dans le système
+        $verif = $this->em->getRepository(User::class)->findOneBy(['groupe'=>$entityGroupe]);
+        if ($verif) return false;
+
+        // Generation des paramètres de connexion
         $racine  = $this->username($entityGroupe->getDistrict()->getRegion()->getId());
         $username = $racine.''.$entityGroupe->getId();
         $password = $this->password();
-        dd($password.'-'.$username);
+
+        if ($fonction === 'NATIONAL') $role[] = 'ROLE_NATION';
+        elseif ($fonction === 'CR') $role[] = 'ROLE_REGION';
+        elseif ($fonction === 'CD') $role[] = 'ROLE_DISTRICT';
+        else $role[] = 'ROLE_USER';
+
+        // Enregistrement
+        $user = new User();
+        $user->setUsername($username);
+        $user->setGroupe($entityGroupe);
+        $user->setRoles($role);
+        $user->setEmail($email);
+        $user->setPassword($this->passwordEncoder->encodePassword(
+            $user,
+            $password
+        ));
+
+        $this->em->persist($user);
+        $this->em->flush();
+
+        $parametre = [
+            'username' => $username,
+            'password' => $password
+        ];
+
+        return $parametre;
     }
 
     /**
      * Enreistrement des paramètres de connexion du super admin
-     * 
+     *
      * @return bool
      */
     public function superAdmin(){

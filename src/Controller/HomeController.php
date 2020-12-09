@@ -41,7 +41,12 @@ class HomeController extends AbstractController
                 if ($scout->getFonction() === 'CHEF DE GROUPE (CG)'){
                     // Recherche la region du CG
                     //$groupe = $this->getDoctrine()->getRepository(Groupe::class)->findByScout($scout->getGroupe());
-                    $this->utility->login($scout->getGroupe());
+                    $parametres = $this->utility->registration($scout->getGroupe(), $email, $fonction = 'CG');
+                    if (!$parametres) dd("L'utilisateur existe déjà");
+                    else {
+                        dd($parametres);
+                    }
+
                 }else{
                     die("Ce n'est pas un chef de groupe");
                 }
