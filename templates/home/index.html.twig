@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}recherche{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-8 offset-2">
+            <form action="{{ path('app_home') }}" method="post">
+                <div class="form-group row">
+                    <div class="col-4">
+                        <input type="text" name="careg_matricule_search" class="form-control" placeholder="Matricule" autocomplete="off">
+                    </div>
+                    <div class="col-4">
+                        <input type="text" name="careg_email_search" class="form-control" placeholder="email" autocomplete="off">
+                    </div>
+                    <div class="col-4">
+                        <button type="submit" class="btn btn-primary">Rechercher</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
