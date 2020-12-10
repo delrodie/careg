@@ -1,13 +1,117 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>{% block title %}ASCCI::{% endblock %}</title>
+        <link rel="stylesheet" href="{{ absolute_url(asset('assets/css/style.css'))}}">
         {% block stylesheets %}{% endblock %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
+    <body class="homepage-5">
+        <div id="scrollUp" title="Scroll To Top">
+            <i class="fas fa-arrow-up"></i>
+        </div>
+        <div class="main">
+            <header class="navbar navbar-sticky navbar-expand-lg navbar-dark">
+                <div class="container position-relative">
+                    <a class="navbar-brand" href="{{ absolute_url(path('app_home')) }}">
+                        <img class="navbar-brand-regular" src="{{ absolute_url(asset('assets/img/ascci.png')) }}" alt="ASCCI logo">
+                        <img class="navbar-brand-sticky" src="{{ absolute_url(asset('assets/img/ascci.png')) }}" alt="ASCCI Logo">
+                    </a>
+                    <button class="navbar-toggler d-lg-none" type="button" data-toggle="navbarToggler" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="navbar-inner">
+                        <!--  Mobile Menu Toggler -->
+                        <button class="navbar-toggler d-lg-none" type="button" data-toggle="navbarToggler" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <nav>
+                            <ul class="navbar-nav" id="navbar-nav">
+                                <li class="nav-item">
+                                    {% if app.user %}
+                                        <a class="nav-link scroll" href="{{ path('app_logout') }}">Déconnexion</a>
+                                    {% else %}
+                                        <a class="nav-link scroll" href="{{ path('app_login') }}">Connexion</a>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </header>
+
+            {% block body %}{% endblock %}
+
+            <div class="height-emulator d-none d-lg-block"></div>
+
+            <footer class="footer-area footer-fixed">
+                <div class="footer-top ptb_100">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12 col-sm-6 col-lg-3">
+                                <div class="footer-items">
+                                    <a class="navbar-brand" href="https://www.scoutascci.org/">
+                                        <img class="logo" src="{{ absolute_url(asset('assets/img/ascci.png')) }}" alt="">
+                                    </a>
+                                    <p class="mt-2 mb-3">
+                                        <strong>A</strong>ssociation des <strong>S</strong>couts <strong>C</strong>atholiques de
+                                        <strong>C</strong>ôte d'<strong>I</strong>voire
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-3">
+                                <!-- Footer Items -->
+                                <div class="footer-items">
+                                    <!-- Footer Title -->
+                                    <h3 class="footer-title mb-2">Liens utiles</h3>
+                                    <ul>
+                                        <li class="py-2"><a href="https://scoutascci.org/">Site internet</a></li>
+                                        <li class="py-2"><a href="http://adhesion.scoutascci.org/">Adhesion</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-3">
+                                <div class="footer-items">
+                                    <h3 class="footer-title mb-2">Nous suivre</h3>
+                                    <ul>
+                                        <li class="py-2"><a href="#">Facebook</a></li>
+                                        <li class="py-2"><a href="#">Instagram</a></li>
+                                        <li class="py-2"><a href="#">Twitter</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6 col-lg-3">
+                                <div class="footer-items">
+                                    <h3 class="footer-title mb-2">Contact</h3>
+                                    <div class="button-group store-buttons store-black d-flex flex-wrap">
+                                        <a href="#">
+                                            <img src="assets/img/icon/google-play-black.png" alt="">
+                                        </a>
+                                        <a href="#">
+                                            <img src="assets/img/icon/app-store-black.png" alt="">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="copyright-area d-flex flex-wrap justify-content-center justify-content-sm-between text-center py-4">
+                                    <div class="copyright-left">&copy; Copyrights 2020 Association des Scouts Catholiques de Côte d'Ivoire.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
         {% block javascripts %}
             <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>

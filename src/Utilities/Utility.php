@@ -34,6 +34,10 @@ class Utility
         if ($fonction === 'CN') {
             $role[] = 'ROLE_ADMIN';
             $username = $racine;
+
+            // Verification de l'existence du groupe dans le système
+            $verif = $this->em->getRepository(User::class)->findOneBy(['username'=>$username]);
+            if ($verif) return false;
         }
         elseif ($fonction === 'NATIONAL') {
             $role[] = 'ROLE_NATION';
@@ -94,6 +98,8 @@ class Utility
      * @return bool
      */
     public function superAdmin(){
+        $exist = $this->em->getRepository(User::class)->findOneBy(['email'=>"delrodieamoikon@gmail.com"]);
+        if ($exist) return false;
         $role[] = 'ROLE_SUPER_ADMIN';
         $user = new User();
         $user->setUsername('delrodie');

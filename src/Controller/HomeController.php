@@ -41,41 +41,82 @@ class HomeController extends AbstractController
                 // si le scout a pour fonction CHEF DE GROUPE (CG) alors traitement
                 if ($scout->getFonction() === 'CHEF DE GROUPE (CG)'){
                     $parametres = $this->utility->registration($scout->getGroupe(), $email, 'CG');
-                    if (!$parametres) dd("L'utilisateur existe déjà");
+                    if (!$parametres) {
+                        $this->addFlash('danger', "ECHEC! votre groupe a déjà été enregistré. Si vous pensez que c'est une erreur veuillez contacter l'equipe nationale");
+                        return $this->redirectToRoute('app_home');
+                    }
                     else {
-                        dd($parametres);
+                        $this->addFlash('success', "SUCCES! Le compte de votre groupe a été crée avec succès. Veuillez copier et garder soignemesement les paramètres de connexion ci-dessous");
+                        $this->addFlash('success', "&nbsp; Login : <strong> &nbsp;" . $parametres['username']."</strong>");
+                        $this->addFlash('success', "&nbsp; Mot de passe : <strong> &nbsp;" . $parametres['password']."</strong>");
+
+                        return $this->redirectToRoute('app_home');
                     }
                 }elseif ($scout->getFonction() === 'COMMISSAIRE DE DISTRICT (CD)'){
                     $parametres = $this->utility->registration($scout->getGroupe(), $email, 'CD');
-                    if (!$parametres) dd("L'utilisateur existe déjà");
+                    if (!$parametres) {
+                        $this->addFlash('danger', "ECHEC! votre district a déjà été enregistré. Si vous pensez que c'est une erreur veuillez contacter l'equipe nationale");
+                        return $this->redirectToRoute('app_home');
+                    }
                     else {
-                        dd($parametres);
+                        $this->addFlash('success', "SUCCES! Le compte de votre district a été crée avec succès. Veuillez copier et garder soignemesement les paramètres de connexion ci-dessous");
+                        $this->addFlash('success', "&nbsp; Login : <strong> &nbsp;" . $parametres['username']."</strong>");
+                        $this->addFlash('success', "&nbsp; Mot de passe : <strong> &nbsp;" . $parametres['password']."</strong>");
+
+                        return $this->redirectToRoute('app_home');
                     }
                 }elseif ($scout->getFonction() === 'COMMISSAIRE REGIONAL (CR)'){
                     $parametres = $this->utility->registration($scout->getGroupe(), $email, 'CR');
-                    if (!$parametres) dd("L'utilisateur existe déjà");
+                    if (!$parametres) {
+                        $this->addFlash('danger', "ECHEC! votre région a déjà été enregistrée. Si vous pensez que c'est une erreur veuillez contacter l'equipe nationale");
+                        return $this->redirectToRoute('app_home');
+                    }
                     else {
-                        dd($parametres);
+                        $this->addFlash('success', "SUCCES! Le compte de votre région a été crée avec succès. Veuillez copier et garder soignemesement les paramètres de connexion ci-dessous");
+                        $this->addFlash('success', "&nbsp; Login : <strong> &nbsp;" . $parametres['username']."</strong>");
+                        $this->addFlash('success', "&nbsp; Mot de passe : <strong> &nbsp;" . $parametres['password']."</strong>");
+
+                        return $this->redirectToRoute('app_home');
                     }
                 }elseif ($scout->getFonction() === 'ASSISTANT COMMISSAIRE NATIONAL (ACN)' || $scout->getFonction() === 'COMMISSAIRE NATIONAL ADJOINT (CNA)'){
                     $parametres = $this->utility->registration($scout->getGroupe(), $email, 'NATIONAL');
-                    if (!$parametres) dd("Le membre de l'equipe national existe déjà");
+                    if (!$parametres) {
+                        $this->addFlash('danger', "ECHEC! votre compte a déjà été enregistré. Si vous pensez que c'est une erreur veuillez contacter le departement PIT");
+                        return $this->redirectToRoute('app_home');
+                    }
                     else {
-                        dd($parametres);
+                        $this->addFlash('success', "SUCCES! Votre compte a été crée avec succès. Veuillez copier et garder soignemesement les paramètres de connexion ci-dessous");
+                        $this->addFlash('success', "&nbsp; Login : <strong> &nbsp;" . $parametres['username']."</strong>");
+                        $this->addFlash('success', "&nbsp; Mot de passe : <strong> &nbsp;" . $parametres['password']."</strong>");
+
+                        return $this->redirectToRoute('app_home');
                     }
                 }elseif ($scout->getFonction() === 'COMMISSAIRE NATIONAL (CN)' || $scout->getFonction() === 'COMMISSAIRE NATIONAL' ){
                     $parametres = $this->utility->registration($scout->getGroupe(), $email, 'CN');
-                    if (!$parametres) dd("L'utilisateur existe déjà");
+                    if (!$parametres) {
+                        $this->addFlash('danger', "ECHEC! votre compte a déjà été enregistré. Si vous pensez que c'est une erreur veuillez contacter le departement PIT");
+                        return $this->redirectToRoute('app_home');
+                    }
                     else {
-                        dd($parametres);
+                        $this->addFlash('success', "SUCCES! Votre compte a été crée avec succès. Veuillez copier et garder soignemesement les paramètres de connexion ci-dessous");
+                        $this->addFlash('success', "&nbsp; Login : <strong> &nbsp;" . $parametres['username']."</strong>");
+                        $this->addFlash('success', "&nbsp; Mot de passe : <strong> &nbsp;" . $parametres['password']."</strong>");
+
+                        return $this->redirectToRoute('app_home');
                     }
                 }
                 else{
-                    die("Ce n'est pas un chef de groupe");
+                    $this->addFlash('danger', "Vous n'êtes pas autorisé(e) à avoir un compte.");
+                    return $this->redirectToRoute('app_home');
                 }
             }elseif ($email === "delrodieamoikon@gmail.com") {
-                $this->utility->superAdmin();
-                dd("c'est enregistrer");
+                $superAdmin = $this->utility->superAdmin();
+                if (!$superAdmin) {
+                    $this->addFlash('danger', "Vous êtes déjà inscrit");
+                    return  $this->redirectToRoute('app_home');
+                }else{
+                    $this->addFlash('success', "Soyez la bienvenue Delrodie AMOIKON");
+                }
             }
             else{
                 $this->addFlash('danger', "Votre matricule n'existe pas ou vous ne vous êtes pas encore acquitté(e) de la cotisation de cette année");
