@@ -44,4 +44,5 @@ security:
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/admin/users, roles: ROLE_SUPER_ADMIN }
+        - { path: ^/backend, roles: ROLE_USER }
         # - { path: ^/profile, roles: ROLE_USER }
