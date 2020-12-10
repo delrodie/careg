@@ -53,14 +53,14 @@
                                 </ul>
                             </li>
 
-
-                            <li class="has_sub">
-                                <a href="javascript:void(0);" class="waves-effect waves-light"><i class="mdi mdi-account"></i><span> Paramètre </span> </a>
-                                <ul class="list-unstyled">
-                                    <li><a href="#"> Utilisateur</a></li>
-                                </ul>
-                            </li>
-
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li class="has_sub">
+                                    <a href="javascript:void(0);" class="waves-effect waves-light"><i class="mdi mdi-account"></i><span> Paramètre </span> </a>
+                                    <ul class="list-unstyled">
+                                        <li><a href="{{ path('user_index') }}"> Utilisateur</a></li>
+                                    </ul>
+                                </li>
+                            {% endif %}
 
                         </ul>
                     </div>
@@ -81,7 +81,9 @@
                                     <div class="dropdown-menu dropdown-menu-right profile-dropdown ">
                                         <!-- item-->
                                         <div class="dropdown-item noti-title">
-                                            <h5>User</h5>
+                                            {% if app.user %}
+                                                <h5> {{ app.user.username|title }}</h5>
+                                            {% endif %}
                                         </div>
                                         <a class="dropdown-item" href="#"><i class="mdi mdi-lock-open-outline"></i> Mot de passe</a>
                                         <div class="dropdown-divider"></div>
