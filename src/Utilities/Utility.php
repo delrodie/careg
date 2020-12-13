@@ -114,6 +114,62 @@ class Utility
     }
 
     /**
+     * Libelisation des niveaux
+     * 
+     * @param $niveau
+     * @return string
+     */
+    public function niveau($niveau)
+    {
+        switch ($niveau){
+            case 1:
+                $libelle = "Uniquement Equipe nationale";
+                break;
+            case 2:
+                $libelle = "L'équipe nationale et les régionaux";
+                break;
+            case 3:
+                $libelle = "Uniquement les chefs";
+                break;
+            case 4:
+                $libelle = "Tous les scouts";
+                break;
+            case 5:
+                $libelle = "Uniquement Equipe régionale";
+                break;
+            case 6:
+                $libelle = "Equipe régionale et les CD";
+                break;
+            case 7:
+                $libelle = "Uniquement les chefs de la région";
+                break;
+            case 8:
+                $libelle = "Tous les scouts de la région";
+                break;
+            case 9:
+                $libelle = "Uniquement Equipe de district";
+                break;
+            case 10:
+                $libelle = "Equipe de district et les CG";
+                break;
+            case 11:
+                $libelle = "Uniquement les chefs du district";
+                break;
+            case 12:
+                $libelle = "Tous les socuts du district";
+                break;
+            case 13:
+                $libelle = "Uniquement les chefs du groupe";
+                break;
+            case 14:
+                $libelle = "Tous les scouts du groupe";
+                break;
+        }
+
+        return $libelle;
+    }
+
+    /**
      * Année de cotisation du scout
      *
      * @return string

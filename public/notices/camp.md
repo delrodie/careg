@@ -33,9 +33,15 @@ Entity
 > **Lieu du camping**: [string]  
 > **Situation géograpique du site**: [text]  
 > **Description du camp**: [text]  
-> **Coordonnées**: [string] (latittude - longetitude)
+> **Coordonnées**: [string] (latittude - longetitude)  
 > **Proprietaire du site d'accueil**: [string] (nom & prenoms - fonction/profession - contact - copie decharge autorisation)  
 > **Niveau du camp**: [select]
 > **Groupe**: [relation]  
 > **CreatedAt**: [datetime]  
 > **UpdatedAt**: [datetime]  
+> 
+
+Controller
+-
+
+Si l'utisateur est a pour role CG alors filtrer la listes des actvités  
