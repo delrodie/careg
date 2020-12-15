@@ -4,18 +4,19 @@
 namespace App\Utilities;
 
 
+use App\Entity\Participant;
 use App\Entity\Sygesca\Groupe;
+use App\Entity\Sygesca\Scout;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use function Sodium\randombytes_buf;
 
 class Utility
 {
     private $em;
     private $passwordEncoder;
 
-    public function __construct(EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder )
     {
         $this->em = $em;
         $this->passwordEncoder = $passwordEncoder;
@@ -92,6 +93,34 @@ class Utility
         return $parametre;
     }
 
+
+    public function participation($participant, $scout, $user)
+    {
+        $groupe = $this->em->getRepository(Groupe::class)->findOneBy(['id'=>$scout->getGroupe()->getId()]); //dd($groupe);
+
+        $participant2 = new Participant();
+        $participant2->setCarte($scout->getCarte());
+        $participant2->setNom($scout->getNom());
+        $participant2->setPrenoms($scout->getPrenoms());
+        $participant2->setDateNaissance($scout->getDatenaiss());
+        $participant2->setLieuNaissance($scout->getLieunaiss());
+        $participant2->setSexe($scout->getSexe());
+        $participant2->setBranche($scout->getBranche());
+        $participant2->setFonction($scout->getFonction());
+        $participant2->setContact($scout->getContact());
+        $participant2->setUrgance($scout->getContactParent());
+        $participant2->setStatut($scout->getStatut()->getLibelle());
+        $participant2->setGroupe($groupe);
+        $participant2->setCreatedBy($user);
+        $participant2->setActivite($participant->getActivite());
+        $participant2->setMatricule($participant->getMatricule());
+
+        $this->em->persist($participant2); //dd($participant2);
+        $this->em->flush();
+
+        return true;
+    }
+
     /**
      * Enreistrement des paramètres de connexion du super admin
      *
@@ -115,7 +144,7 @@ class Utility
 
     /**
      * Libelisation des niveaux
-     * 
+     *
      * @param $niveau
      * @return string
      */

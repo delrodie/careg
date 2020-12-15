@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Activite;
+use App\Entity\Participant;
 use App\Form\ActiviteGroupeType;
 use App\Form\ActiviteGroupeEditType;
 use App\Form\ActiviteType;
 use App\Repository\ActiviteRepository;
 use App\Utilities\GestionMedia;
 use App\Utilities\Utility;
+use Cocur\Slugify\Slugify;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,8 +46,9 @@ class ActiviteController extends AbstractController
             $activityList = $activiteRepository->findBy(['groupe'=>$user->getGroupe()],['dateDebut'=>"DESC"]);
         }
         //dd($activityList);
-        $i = 0;
+        $i = 0; $activites = [];
         foreach ($activityList as $item){
+            $participants = count($this->getDoctrine()->getRepository(Participant::class)->findBy(['activite'=>$item->getId()]));
             $activites[$i] = [
                 'id' => $item->getId(),
                 'type' => $item->getType(),
@@ -65,10 +68,16 @@ class ActiviteController extends AbstractController
                 'createdAt' => $item->getCreatedAt(),
                 'updatedAt' => $item->getUpdatedAt(),
                 'groupe' => $item->getGroupe(),
-                'annee' => $item->getAnnee()
+                'annee' => $item->getAnnee(),
+                'slug' => $item->getSlug(),
+                'participants' => $participants
             ];
 
             $i++;
+        }
+
+        if (!$activites){
+            $activites = $activiteRepository->findBy(['groupe'=>$user->getGroupe()],['dateDebut'=>"DESC"]);
         }
 
         return $this->render('activite/index.html.twig', [
@@ -116,6 +125,12 @@ class ActiviteController extends AbstractController
             $activite->setAnnee($this->utility->annee());
             //dd($activite);
 
+            // Slug
+            $slugify = new Slugify();
+            $slug_string = $activite->getNom().'-'.time();
+            $slug = $slugify->slugify($slug_string);
+            $activite->setSlug($slug);
+
             $entityManager->persist($activite);
             $entityManager->flush();
 
@@ -131,7 +146,7 @@ class ActiviteController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="backend_activite_show", methods={"GET"})
+     * @Route("/{slug}", name="backend_activite_show", methods={"GET"})
      */
     public function show(Activite $activite): Response
     {
@@ -141,7 +156,7 @@ class ActiviteController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="backend_activite_edit", methods={"GET","POST"})
+     * @Route("/{slug}/edit", name="backend_activite_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Activite $activite): Response
     {
@@ -173,7 +188,7 @@ class ActiviteController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="backend_activite_delete", methods={"DELETE"})
+     * @Route("/{slug}", name="backend_activite_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Activite $activite): Response
     {

@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Entity\Sygesca\Groupe;
 use App\Repository\ActiviteRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\IdGenerator\UuidV4Generator;
 
 /**
  * @ORM\Entity(repositoryClass=ActiviteRepository::class)
@@ -15,9 +14,8 @@ class Activite
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="uuid", unique=true)
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class="Symfony\Bridge\Doctrine\IdGenerator\UuidV4Generator")
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
      */
     private $id;
 
@@ -111,7 +109,12 @@ class Activite
      */
     private $annee;
 
-    public function getId(): ?object
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $slug;
+
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -344,6 +347,18 @@ class Activite
     public function setAnnee(?string $annee): self
     {
         $this->annee = $annee;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

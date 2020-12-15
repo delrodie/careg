@@ -19,6 +19,18 @@ class ActiviteRepository extends ServiceEntityRepository
         parent::__construct($registry, Activite::class);
     }
 
+    /**
+     * @param $activite
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function findActivite($activite)
+    {
+        return $this->createQueryBuilder('a')
+            ->where('a.id = :activite')
+            ->setParameter('activite', $activite)
+            ;
+    }
+
     // /**
     //  * @return Activite[] Returns an array of Activite objects
     //  */

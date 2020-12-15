@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Participant index{% endblock %}
+
+{% block body %}
+    <h1>Participant index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Matricule</th>
+                <th>Carte</th>
+                <th>Nom</th>
+                <th>Prenoms</th>
+                <th>DateNaissance</th>
+                <th>LieuNaissance</th>
+                <th>Sexe</th>
+                <th>Branche</th>
+                <th>Fonction</th>
+                <th>Contact</th>
+                <th>Urgance</th>
+                <th>Statut</th>
+                <th>CreatedBy</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for participant in participants %}
+            <tr>
+                <td>{{ participant.id }}</td>
+                <td>{{ participant.matricule }}</td>
+                <td>{{ participant.carte }}</td>
+                <td>{{ participant.nom }}</td>
+                <td>{{ participant.prenoms }}</td>
+                <td>{{ participant.dateNaissance }}</td>
+                <td>{{ participant.lieuNaissance }}</td>
+                <td>{{ participant.sexe }}</td>
+                <td>{{ participant.branche }}</td>
+                <td>{{ participant.fonction }}</td>
+                <td>{{ participant.contact }}</td>
+                <td>{{ participant.urgance }}</td>
+                <td>{{ participant.statut }}</td>
+                <td>{{ participant.createdBy }}</td>
+                <td>
+                    <a href="{{ path('backend_participant_show', {'id': participant.id}) }}">show</a>
+                    <a href="{{ path('backend_participant_edit', {'id': participant.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="15">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
