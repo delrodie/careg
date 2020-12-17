@@ -19,6 +19,27 @@ class ParticipantRepository extends ServiceEntityRepository
         parent::__construct($registry, Participant::class);
     }
 
+    public function findByRegion($region)
+    {
+        return $this->createQueryBuilder('p')
+            ->addSelect('a')
+            ->addSelect('g')
+            ->addSelect('d')
+            ->addSelect('r')
+            ->innerJoin('p.activite', 'a')
+            ->innerJoin('p.groupe', 'g')
+            ->innerJoin('g.district', 'd')
+            ->innerJoin('d.region', 'r')
+            ->where('r.id = :region')
+            ->andWhere(':date BETWEEN a.dateDebut AND a.dateFin')
+            ->setParameters([
+                'region' => $region,
+                'date' => date('Y-m-d', time())
+            ])
+            ->getQuery()->getResult()
+            ;
+    }
+
     // /**
     //  * @return Participant[] Returns an array of Participant objects
     //  */

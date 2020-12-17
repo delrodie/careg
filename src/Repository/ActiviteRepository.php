@@ -31,6 +31,39 @@ class ActiviteRepository extends ServiceEntityRepository
             ;
     }
 
+    /**
+     * @return int|mixed|string
+     */
+    public function findEncours()
+    {
+        return $this->createQueryBuilder('a')
+            ->addSelect('g')
+            ->addSelect('d')
+            ->addSelect('r')
+            ->innerJoin('a.groupe', 'g')
+            ->innerJoin('g.district', 'd')
+            ->innerJoin('d.region', 'r')
+            ->where(':date BETWEEN a.dateDebut AND a.dateFin')
+            ->setParameter('date', date('Y-m-d', time()))
+            ->getQuery()->getResult()
+            ;
+    }
+
+    public function findByRegion($region)
+    {
+        return $this->createQueryBuilder('a')
+            ->addSelect('g')
+            ->addSelect('d')
+            ->addSelect('r')
+            ->leftJoin('a.groupe', 'g')
+            ->leftJoin('g.district', 'd')
+            ->leftJoin('d.region', 'r')
+            ->where('r.id = :region')
+            ->setParameter('region', $region)
+            ->getQuery()->getResult()
+            ;
+    }
+
     // /**
     //  * @return Activite[] Returns an array of Activite objects
     //  */

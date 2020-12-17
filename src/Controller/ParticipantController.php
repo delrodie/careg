@@ -63,7 +63,7 @@ class ParticipantController extends AbstractController
                 ]);
                 if ($verifExist) {
                     $this->addFlash('danger', "Ce scout a déjà été ajouté à cette activité");
-                    return $this->redirectToRoute('backend_participant_new');
+                    return $this->redirectToRoute('backend_participant_new',['slug'=>$activite->getSlug()]);
                 }
                 $participant->setActivite($activite);
                 $this->utility->participation($participant, $scout, $user->getUsername());
@@ -119,12 +119,17 @@ class ParticipantController extends AbstractController
      */
     public function delete(Request $request, Participant $participant): Response
     {
+        // sauvegarde de l'activité
+        $activite = $participant->getActivite(); //dd($activite->getSlug());
+
         if ($this->isCsrfTokenValid('delete'.$participant->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($participant);
             $entityManager->flush();
+
+            $this->addFlash('success', 'Le scout a été supprimé avec succès de la liste des participants');
         }
 
-        return $this->redirectToRoute('backend_participant_index');
+        return $this->redirectToRoute('backend_participant_new', ['slug'=>$activite->getSlug()]);
     }
 }

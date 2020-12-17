@@ -222,6 +222,68 @@ class Utility
     }
 
     /**
+     * Initialisation des regions
+     *
+     * @param $id
+     * @return string
+     */
+    public function initial_region($id)
+    {
+        switch ($id){
+            case 1:
+                $strt = ["EN", "EQUIPE NATIONALE", "darkblue"];
+                break;
+            case 4:
+                $strt = ["ABG", "ABENGOUROU", "darkgreen"];
+                break;
+            case 5:
+                $strt = ["ABJ", "ABIDJAN", "purple"];
+                break;
+            case 6:
+                $strt = ["AGB", "AGBOVILE", "deeppink"];
+                break;
+            case 7:
+                $strt = ["BDK", "BONDOUKOU", "maroon"];
+                break;
+            case 8:
+                $strt = ["BKE", "BOUAKE", "deepskyblue"];
+                break;
+            case 9:
+                $strt = ["DAL", "DALOA", "floralwhite"];
+                break;
+            case 10:
+                $strt = ["GAG", "GAGNOA", "black"];
+                break;
+            case 11:
+                $strt = ["GBA", "GRAND BASSAM", "pink"];
+                break;
+            case 12:
+                $strt = ["KAT", "KATIOLA", "blanchedalmond"];
+                break;
+            case 13:
+                $strt = ["KHO", "KORHOGO", "dimgray"];
+                break;
+            case 14:
+                $strt = ["MAN", "MAN", "darkred"];
+                break;
+            case 15:
+                $strt = ["ODI", "ODIENNE", "cornflowerblue"];
+                break;
+            case 16:
+                $strt = ["SPO", "SAN-PEDRO", "lightskyblue"];
+                break;
+            case 17:
+                $strt = ["YAK", "YAMOUSSOUKRO", "steelblue"];
+                break;
+            case 18:
+                $strt = ["YOP", "YOPOUGON", "chartreuse"];
+                break;
+        }
+
+        return $strt;
+    }
+
+    /**
      * Generation du login
      *
      * @param $region

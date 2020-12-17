@@ -1,17 +1,269 @@
 {% extends 'backend_layout.html.twig' %}
 
-{% block title %}Hello DashboardController!{% endblock %}
+{% block title %}{{ parent()}} Tableau de bord{% endblock %}
 
 {% block body %}
+    <div class="content-fluid">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="page-title-box">
+                    <h4 class="page-title">Tableau de bord</h4>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }}" style="font-size: 1.3rem;">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-xl-4">
+                <div class="card m-b-30">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-7">
+                                <h6>Activités</h6>
+                                <small class="">Le total de activités effectuées</small>
+                            </div>
+                            <div class="col-5">
+                                <h3 class="text-center">{{ activites|length|number_format(0,'','.') }}</h3>
+                            </div>
+                        </div>
+                        <div class="progress mt-2" style="height: 8px;">
+                            <div class="progress-bar bg-warning w-75" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-xl-4">
+                <div class="card m-b-30">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-7">
+                                <h6>Participation</h6>
+                                <small class="">Moyenne des participants</small>
+                            </div>
+                            <div class="col-5">
+                                <h3 class="text-center">{{ moyenne_participant|number_format(0,1,'') }}</h3>
+                            </div>
+                        </div>
+                        <div class="progress mt-2" style="height: 8px;">
+                            <div class="progress-bar bg-info w-75" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 col-xl-4">
+                <div class="card m-b-30">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-8">
+                                <h6>Encours</h6>
+                                <small class="pr-5">Les activité encours</small>
+                            </div>
+                            <div class="col-4">
+                                <h3>{{ activites_encours|length }}</h3>
+                            </div>
+                        </div>
+                        <div class="progress mt-2" style="height: 8px;">
+                            <div class="progress-bar bg-light w-75" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-md-12 col-xl-8">
+                <div class="card m-b-30">
+                    <div class="card-body">
+                        <h6>Participants</h6>
+                        <canvas id="pieDesparticipants"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-xl-4">
+                <div class="card m-b-30">
+                    <div class="card-body">
+                        <h6>Activités encours en région</h6>
+                        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+
+                            <div class="carousel-inner">
+                                {% for region in regions|filter(region => region.nombre > 0) %}
+                                    <div class="carousel-item {% if loop.first %}active{% endif%} col-auto">
+                                        <div class="text-center mt-5">
+                                            <h6 class="">{{ region.nom }}</h6>
+
+                                            <div class="row text-center mt-5">
+                                                <div class="col-6 border-right">
+                                                    <h3 class="text-white">{{ region.nombre|number_format(0,'','.') }}</h3>
+                                                    <small class="text-muted">Total activités</small>
+                                                </div>
+                                                <div class="col-6">
+                                                    <h3 class="text-white text-primary">{{ region.participant|number_format(0,',',' ')}} </h3>
+                                                    <small class="text-muted">Cumul participants</small>
+                                                </div>
+                                                <div class="col-12 text-center mt-5 mb-5">
+                                                    <a href="#" class="btn btn-outline-light  btn-sm px-3">Voir la liste des activités</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-md-12 col-xl-12">
+                <div class="card">
+                    <div class="card-body table-data">
+                        <h6 class="d-inline-block">Cartographie des activités encours</h6>
+                        <div class="float-right ml-2">
+                            <div class="dropdown">
+                                <a class="btn btn-outline-light btn-sm" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="mdi mdi-menu"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#">Cette semaine</a>
+                                    <a class="dropdown-item" href="#">Ce mois</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="boxscroll w-100">
+                            <div class="tab-content" id="pills-tabContent">
+                                <div class="tab-pane fade show active" id="user-history" role="tabpanel" >
+                                    <div class="table-responsive user-history">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th class="border-top-0 w-60">Regions</th>
+                                                <th class="border-top-0">Districts</th>
+                                                <th class="border-top-0">Groupes</th>
+                                                <th class="border-top-0">Lieux</th>
+                                                <th class="border-top-0">Concernés</th>
+                                                <th class="border-top-0">Participants</th>
+                                                <th class="border-top-0">Status</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for activite in activites_encours%}
+                                                <tr>
+                                                    <td>{{ activite.region.nom }}</td>
+                                                    <td>{{ activite.district.nom|title }}</td>
+                                                    <td>{{ activite.groupe.paroisse|title }}</td>
+                                                    <td>{{ activite.lieu }}</td>
+                                                    <td>{{ activite.niveau }}</td>
+                                                    <td class="text-center">{{ activite.participants }}</td>
+                                                    <td class="text-center"><a href="#" class="badge badge-boxed  badge-primary"><i class="fa fa-eye"></i></a></td>
+                                                </tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        <div class="">
+                                            <a href="#" class="text-primary">
+                                                <i class="mdi mdi-chevron-down"></i> Voir toutes les activités
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card m-b-30">
+                    <div class="card-body text-white" >
+                        <h4 class="mt-0 header-title">Activités en cours</h4>
+                        <p class="text-muted font-14 d-inline-block text-truncate w-100">
+                            Les regroupements encours sur l'entendu du territoire
+                        </p>
+                        <canvas id="nuagesDesActivites" style="color: white"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        canvas{
+            color: white;
+            font-size: 2.2rem;
+        }
+        .couleur{
+            color: #02d6f6;
+        }
+    </style>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script>
+        $().ready(function () {
+            var ctx = document.getElementById('nuagesDesActivites').getContext('2d');
+            var chart = new Chart(ctx, {
+                // The type of chart we want to create
+                type: 'line',
+
+                // The data for our dataset
+                data: {
+                    labels: [{% for region in regions %}"{{ region.initial }}"{% if not loop.last %}, {% endif %}{% endfor %}],
+                    datasets: [{
+                        label: 'Activités',
+                        backgroundColor: 'rgb(255, 255, 255)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: [{% for region in regions %}{{ region.nombre }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                        fill: false,
+                        pointRadius: [{% for region in regions %}{{ region.nombre }}{% if not loop.last %}, {% endif %}{% endfor %}],
+                        pointHoverRadius: 15,
+                        showLine: false,
+                        color: 'rgba(255, 255, 255)'
+                    }]
+                },
+                // Configuration options go here
+                options: {}
+            });
 
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+            var cty = document.getElementById('pieDesparticipants').getContext('2d');
+            var chart = new Chart(cty, {
+                // The type of chart we want to create
+                type: 'pie',
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/delrodie/www/applications/ascci/careg/src/Controller/DashboardController.php'|file_link(0) }}">src/Controller/DashboardController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/delrodie/www/applications/ascci/careg/templates/dashboard/index.html.twig'|file_link(0) }}">templates/dashboard/index.html.twig</a></code></li>
-    </ul>
-</div>
+                // The data for our dataset
+                data: {
+                    labels: [{% for region in regions|filter(region => region.participant > 0) %}"{{ region.initial }}"{% if not loop.last %}, {% endif %}{% endfor %}],
+                    datasets: [{
+                        label: 'Activités',
+                        backgroundColor: [
+                            [{% for region in regions|filter(region => region.participant > 0) %}"{{ region.couleur }}"{% if not loop.last %}, {% endif %}{% endfor %}]
+                        ],
+                        borderColor: 'rgb(255, 255, 255)',
+                        data: [{% for region in regions|filter(region => region.participant > 0) %}{{ region.participant }}{% if not loop.last %}, {% endif %}{% endfor %}],
+
+                    }]
+                },
+                // Configuration options go here
+                options: {}
+            });
+
+        })
+
+    </script>
 {% endblock %}
