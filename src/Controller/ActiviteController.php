@@ -44,7 +44,14 @@ class ActiviteController extends AbstractController
         // Si l'utilisateur est un chef de groupe
         if ($user->getRoles()[0] === "ROLE_USER"){
             $activityList = $activiteRepository->findBy(['groupe'=>$user->getGroupe()],['dateDebut'=>"DESC"]);
+        }elseif ($user->getRoles()[0] === "ROLE_DISTRICT"){
+
+        }elseif ($user->getRoles()[0] === "ROLE_REGION"){
+
+        }else{
+            $activityList = $activiteRepository->findBy([],['dateDebut'=>"DESC"]);
         }
+
         //dd($activityList);
         $i = 0; $activites = [];
         foreach ($activityList as $item){

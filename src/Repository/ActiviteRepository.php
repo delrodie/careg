@@ -32,6 +32,8 @@ class ActiviteRepository extends ServiceEntityRepository
     }
 
     /**
+     * Activité encours pour admin
+     *
      * @return int|mixed|string
      */
     public function findEncours()
@@ -62,6 +64,31 @@ class ActiviteRepository extends ServiceEntityRepository
             ->setParameter('region', $region)
             ->getQuery()->getResult()
             ;
+    }
+
+    /**
+     * La liste des activités encours en fonction du groupe district ou region
+     *
+     * @param null $groupe
+     * @param null $district
+     * @param null $region
+     * @return int|mixed|string
+     */
+    public function findEncoursBy($groupe = null, $district = null, $region = null)
+    {
+        $q = $this->createQueryBuilder('a')->addSelect('g');
+        if ($groupe){
+            $q->leftJoin('a.groupe', 'g')
+                ->where('g.id = :groupe')
+                ->andWhere(':date BETWEEN a.dateDebut AND a.dateFin')
+                ->setParameters([
+                    'groupe' => $groupe,
+                    'date' => date('Y-m-d', time())
+                ])
+                ;
+        }
+
+        return $q->getQuery()->getResult();
     }
 
     // /**

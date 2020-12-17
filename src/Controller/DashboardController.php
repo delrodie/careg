@@ -73,15 +73,52 @@ class DashboardController extends AbstractController
         }elseif($user->getRoles()[0]==='ROLE_DISTRICT'){
             $activites = $activitesRepository->findAll();
         }else{
-            $activites = $activitesRepository->findAll();
+            $activites = $activitesRepository->findBy(['groupe'=>$user->getGroupe()->getId(), 'annee'=>$this->utility->annee()]);
+
+            // Participation
+            $nombre_activite = count($activites);
+            if ($nombre_activite === 0) $nombre_activite = 1;
+            $total_participant = 0;
+            foreach ($activites as $item){
+                $nombre = count($participantRepository->findBy(['activite'=>$item->getId()]));
+                $total_participant = $total_participant + $nombre;
+            }
+            $moyenne_participant = $total_participant / $nombre_activite;
+
+            // Activites listes
+            if (!$activites){
+                $activiteList = $activites;
+            }else{
+                $i=0; $activiteList = [];
+                foreach ($activites as $activite){
+                    $activiteList[$i]=[
+                        'type' => $activite->getType(),
+                        'nom' => $activite->getNom(),
+                        'dateDebut' => $activite->getDateDebut(),
+                        'dateFin' => $activite->getDateFin(),
+                        'lieu' => $activite->getLieu(),
+                        'niveau' => $this->utility->niveau($activite->getNiveau()),
+                        'slug' => $activite->getSlug(),
+                        'participant' => count($participantRepository->findBy(['activite'=>$activite->getId()]))
+                    ];
+                }
+            }
+
+            return $this->render('dashboard/groupe.html.twig',[
+                'activites' => $activites,
+                'moyenne_participant' => $moyenne_participant,
+                'activite_encours' => $activitesRepository->findEncoursBy($user->getGroupe()->getId()),
+                'activiteList' => $activiteList
+            ]);
         }
 
         // Statistiques
         $nombre_activite = count($activites);
         if ($nombre_activite === 0) $nombre_activite = 1;
+        $total_participant = 0;
         foreach ($activites as $item){
             $nombre = count($participantRepository->findAll());
-            $total_participant = $nombre++;
+            $total_participant = $total_participant + $nombre;
         }
         $moyenne_participant = $total_participant / $nombre_activite;
 
