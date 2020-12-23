@@ -157,8 +157,13 @@ class ActiviteController extends AbstractController
      */
     public function show(Activite $activite): Response
     {
+        $participants = $this->getDoctrine()->getRepository(Participant::class)->findBy(['activite'=>$activite->getId()]);
+        //dd($participants);
+        $cible = $this->utility->niveau($activite->getNiveau());
         return $this->render('activite/show.html.twig', [
             'activite' => $activite,
+            'participants' => $participants,
+            'cible' => $cible
         ]);
     }
 

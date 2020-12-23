@@ -165,7 +165,7 @@
                                                     <td>{{ activite.lieu }}</td>
                                                     <td>{{ activite.niveau }}</td>
                                                     <td class="text-center">{{ activite.participants }}</td>
-                                                    <td class="text-center"><a href="#" class="badge badge-boxed  badge-primary"><i class="fa fa-eye"></i></a></td>
+                                                    <td class="text-center"><a href="{{ path('backend_activite_show', {'slug': activite.slug}) }}" class="badge badge-boxed  badge-primary"><i class="fa fa-eye"></i></a></td>
                                                 </tr>
                                             {% endfor %}
                                             </tbody>
