@@ -25,7 +25,7 @@ final class Version20201214120504 extends AbstractMigration
         $this->addSql('ALTER TABLE Activite ADD CONSTRAINT FK_410337437A45358C FOREIGN KEY (groupe_id) REFERENCES groupe (id)');
         $this->addSql('ALTER TABLE Participant ADD CONSTRAINT FK_5103E4C67A45358C FOREIGN KEY (groupe_id) REFERENCES groupe (id)');
         $this->addSql('ALTER TABLE Participant ADD CONSTRAINT FK_5103E4C69B0F88B1 FOREIGN KEY (activite_id) REFERENCES Activite (id)');
-        $this->addSql('ALTER TABLE User CHANGE roles roles JSON NOT NULL');
+        $this->addSql('ALTER TABLE User CHANGE roles roles LONGTEXT NOT NULL');
     }
 
     public function down(Schema $schema) : void
